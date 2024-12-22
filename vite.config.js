@@ -7,7 +7,7 @@ export default defineConfig({
     viteStaticCopy({
       targets: [
         {
-          src: 'public/articles/**/*', // Copies articles folder
+          src: 'public/articles/**/*', // Copies articles folder to dist/articles
           dest: 'articles', // Keeps it available after build
         },
       ],
@@ -15,26 +15,36 @@ export default defineConfig({
   ],
 
   server: {
-    open: true, // Opens browser
-    port: 3000, // Dev server port
+    open: true, // Automatically open browser on server start
+    port: 3000, // Development server port
   },
 
   build: {
-    outDir: 'dist', // Build directory
-    assetsDir: 'assets', // Asset folder
+    outDir: 'dist', // Output directory for build
+    assetsDir: 'assets', // Directory for static assets
     rollupOptions: {
       input: {
-        main: path.resolve(__dirname, 'index.html'),
+        main: path.resolve(__dirname, 'index.html'), // Entry point
       },
     },
-    sourcemap: false,
-    emptyOutDir: true, // Clears old files before build
-    copyPublicDir: true, // Ensures public files are copied
+    sourcemap: false, // Disable source maps for production
+    emptyOutDir: true, // Clears old files in the dist folder before build
+    copyPublicDir: true, // Ensures files in public/ are copied to dist/
   },
 
   resolve: {
     alias: {
-      '@': path.resolve(__dirname, 'src'),
+      '@': path.resolve(__dirname, 'src'), // Alias for cleaner imports
     },
+  },
+
+  // Optimize dependencies to ensure compatibility
+  optimizeDeps: {
+    include: ['axios', 'rss-parser'], // Pre-bundle dependencies for faster builds
+  },
+
+  // Build environment settings
+  define: {
+    'process.env': {}, // Ensure compatibility with process.env variables
   },
 });
