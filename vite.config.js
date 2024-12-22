@@ -1,4 +1,3 @@
-// vite.config.js
 import { defineConfig } from 'vite';
 import path from 'path';
 import { viteStaticCopy } from 'vite-plugin-static-copy';
@@ -29,6 +28,8 @@ export default defineConfig({
       },
     },
     sourcemap: false,
+    emptyOutDir: true, // Clears old files before build
+    copyPublicDir: true, // Ensures public files are copied
   },
 
   resolve: {
