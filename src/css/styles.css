@@ -173,13 +173,6 @@ main {
     text-decoration: underline;
 }
 
-.article-emojis {
-    font-size: 44px;
-    letter-spacing: 20px;
-    margin-bottom: 10px;
-    text-align: left;
-}
-
 /* Read Full Article Button Styles */
 .read-full-link {
     display: inline-block;
