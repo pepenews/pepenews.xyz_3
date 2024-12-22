@@ -1,7 +1,7 @@
 /* Font-face definitions */
 @font-face {
     font-family: "Unbounded";
-    src: url("/static/fonts/Unbounded-VariableFont_wght.ttf") format("truetype");
+    src: url("/src/fonts/Unbounded-VariableFont_wght.ttf") format("truetype");
     font-weight: 100 900;
     font-display: swap;
 }
