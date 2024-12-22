@@ -21,7 +21,7 @@ fetch('/articles/article-previews.json')
             articleElement.innerHTML = `
                 <h3>${article.title}</h3>
                 <p>${article.preview}</p>
-                <a href="${localLink}" target="_blank">Read Full Article</a>
+                <a href="${localLink}" class="read-full-link" target="_blank">Read Full Article</a>
             `;
 
             articlesList.appendChild(articleElement);
