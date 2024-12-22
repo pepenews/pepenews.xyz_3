@@ -38,14 +38,12 @@ fetch('/articles/article-previews.json')
                 <h3>${article.title}</h3>
                 <p>${article.preview}</p>
                 <div class="article-button-container">
-                    <a href="${localLink}" class="read-full-link" target="_blank">Read Full Article</a>
+                    <a href="${localLink}" class="read-full-link" target="_blank" rel="noopener noreferrer">Read Full Article</a>
                 </div>
             `;
 
-            // Append the article to the articles list with a slight delay (to ensure DOM rendering)
-            setTimeout(() => {
-                articlesList.appendChild(articleElement);
-            }, 0);
+            // Append the article to the articles list
+            articlesList.appendChild(articleElement);
         });
     })
     .catch(error => {
