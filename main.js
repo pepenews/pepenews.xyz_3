@@ -1,12 +1,12 @@
-// main.js (Minimal version with NO OpenAI code)
+// main.js (Minimal version, NO OpenAI, outputs to dist/articles)
 
 const RSSParser = require('rss-parser');
 const fs = require('fs');
 const path = require('path');
 const axios = require('axios');
 
-// Output directory for articles
-const outputDir = path.join(__dirname, 'public', 'articles');
+// 1. Output to "dist/articles" so they exist after the build
+const outputDir = path.join(__dirname, 'dist', 'articles');
 if (!fs.existsSync(outputDir)) {
   fs.mkdirSync(outputDir, { recursive: true });
 }
@@ -81,21 +81,22 @@ async function fetchAndProcessArticles() {
       const articleFilename = `${formattedDate}-${safeTitle}.html`;
       createArticleHTML(item.title, content, articleFilename);
 
+      // Link path references "/articles/filename.html" from the site root
       articles.push({
         title: item.title,
         link: `/articles/${articleFilename}`,
         pubDate: item.pubDate,
-        // For now, no AI preview
         preview: content.slice(0, 100) + '...',
       });
     }
 
+    // 2. Save the "previews" JSON into the dist folder as well
     fs.writeFileSync(
       path.join(outputDir, 'article-previews.json'),
       JSON.stringify(articles, null, 2)
     );
 
-    console.log('Articles successfully processed and saved (no OpenAI yet).');
+    console.log('Articles successfully processed and saved.');
   } catch (error) {
     console.error('Error processing articles:', error);
     process.exit(1);
