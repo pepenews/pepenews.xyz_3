@@ -5,8 +5,9 @@
   "main": "index.js",
   "scripts": {
     "dev": "vite",
-    "build": "node main.js && vite build",
+    "build": "vite build",
     "preview": "vite preview",
+    "vercel-build": "node main.js && vite build",
     "start": "vite preview --port $PORT"
   },
   "dependencies": {
@@ -22,3 +23,4 @@
     "node": "18.x"
   }
 }
+
