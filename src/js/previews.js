@@ -15,7 +15,7 @@ fetch('/articles/article-previews.json')
             const articleElement = document.createElement('div');
             articleElement.classList.add('article');
 
-            // Correct the URL by ensuring it starts with /
+            // Ensure the link starts with '/articles/'
             const localLink = article.link.startsWith('/') ? article.link : `/articles/${article.link}`;
 
             // Create HTML structure for the article
