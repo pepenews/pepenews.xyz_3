@@ -33,14 +33,31 @@ fetch('/articles/article-previews.json')
             const articleElement = document.createElement('div');
             articleElement.classList.add('article');
 
-            // Build the article's HTML structure
-            articleElement.innerHTML = `
-                <h3>${article.title}</h3>
-                <p>${article.preview}</p>
-                <div class="article-button-container">
-                    <a href="${localLink}" class="read-full-link" target="_blank" rel="noopener noreferrer">Read Full Article</a>
-                </div>
-            `;
+            // Create title element
+            const titleElement = document.createElement('h3');
+            titleElement.textContent = article.title;
+
+            // Create preview element
+            const previewElement = document.createElement('p');
+            previewElement.textContent = article.preview;
+
+            // Create button container
+            const buttonContainer = document.createElement('div');
+            buttonContainer.classList.add('article-button-container');
+
+            // Create link element
+            const linkElement = document.createElement('a');
+            linkElement.href = localLink;
+            linkElement.textContent = 'Read Full Article';
+            linkElement.classList.add('read-full-link');
+            linkElement.target = '_blank';
+            linkElement.rel = 'noopener noreferrer';
+
+            // Append elements in correct order
+            buttonContainer.appendChild(linkElement);
+            articleElement.appendChild(titleElement);
+            articleElement.appendChild(previewElement);
+            articleElement.appendChild(buttonContainer);
 
             // Append the article to the articles list
             articlesList.appendChild(articleElement);
