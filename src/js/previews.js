@@ -3,29 +3,34 @@
 // Fetch and display article previews from the local JSON file
 fetch('/articles/article-previews.json')
     .then(response => {
+        // Check if the response is valid
         if (!response.ok) {
             throw new Error(`HTTP error! Status: ${response.status}`);
         }
-        return response.json();
+        return response.json(); // Parse JSON
     })
     .then(data => {
         const articlesList = document.getElementById('coindesk-articles');
 
-        data.forEach(article => {
-            // Log the article object for debugging
-            console.log('Article:', article);
+        // Debug: Log the data for verification
+        console.log('Fetched Articles:', data);
 
-            // Validate and fix the link format
+        // Loop through each article and render it
+        data.forEach(article => {
+            // Debug: Log each article object
+            console.log('Processing Article:', article);
+
+            // Ensure the link starts with '/articles/'
             let localLink = article.link;
             if (!localLink.startsWith('/articles/')) {
                 localLink = `/articles/${localLink}`;
             }
 
-            // Create article element
+            // Create a new article container
             const articleElement = document.createElement('div');
             articleElement.classList.add('article');
 
-            // Build inner HTML
+            // Build the article's HTML structure
             articleElement.innerHTML = `
                 <h3>${article.title}</h3>
                 <p>${article.preview}</p>
@@ -34,8 +39,12 @@ fetch('/articles/article-previews.json')
                 </div>
             `;
 
-            // Append to the articles list
+            // Append the article to the articles list
             articlesList.appendChild(articleElement);
         });
     })
-    .catch(error => console.error('Error fetching article previews:', error));
+    .catch(error => {
+        // Handle errors and log them
+        console.error('Error fetching article previews:', error);
+        alert('Failed to load articles. Please try again later.');
+    });
