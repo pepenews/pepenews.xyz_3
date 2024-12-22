@@ -1,12 +1,10 @@
-// main.js (Minimal version, NO OpenAI, outputs to dist/articles)
-
 const RSSParser = require('rss-parser');
 const fs = require('fs');
 const path = require('path');
 const axios = require('axios');
 
-// 1. Output to "dist/articles" so they exist after the build
-const outputDir = path.join(__dirname, 'dist', 'articles');
+// 1. Output to "public/articles" to work with Vercel
+const outputDir = path.join(__dirname, 'public', 'articles');
 if (!fs.existsSync(outputDir)) {
   fs.mkdirSync(outputDir, { recursive: true });
 }
@@ -17,9 +15,10 @@ if (!fs.existsSync(outputDir)) {
 async function fetchFullContent(url) {
   try {
     const response = await axios.get(url);
-    // Just return a small slice; no HTML parsing or AI
-    return response.data.slice(0, 300) || 'Content not found';
-  } catch {
+    // Fetch more content (500 characters) for better previews
+    return response.data.slice(0, 500) || 'Content not found';
+  } catch (error) {
+    console.error(`Error fetching content from ${url}:`, error.message);
     return 'Content not found';
   }
 }
@@ -31,10 +30,10 @@ function slugify(text) {
   return text
     ?.toString()
     .toLowerCase()
-    .replace(/\s+/g, '-')
-    .replace(/[^\w-]+/g, '')
-    .replace(/-+/g, '-')
-    .slice(0, 30);
+    .replace(/\s+/g, '-') // Replace spaces with hyphens
+    .replace(/[^\w-]+/g, '') // Remove invalid characters
+    .replace(/-+/g, '-') // Replace multiple hyphens
+    .slice(0, 30); // Limit to 30 characters
 }
 
 /**
@@ -47,15 +46,17 @@ function createArticleHTML(title, content, filename) {
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="${content.slice(0, 150)}" />
+    <meta name="keywords" content="crypto, news, pepe, finance" />
     <title>${title}</title>
-    <link rel="stylesheet" href="/src/css/styles.css">
+    <link rel="stylesheet" href="/assets/styles.css">
 </head>
 <body>
     <main id="app">
         <div class="article-container">
             <h1>${title}</h1>
             <p>${content}</p>
-            <a href="/index.html">Back to Home</a>
+            <a href="/index.html" class="read-full-link">Back to Home</a>
         </div>
     </main>
 </body>
@@ -73,6 +74,12 @@ async function fetchAndProcessArticles() {
     const articles = [];
 
     for (const item of feed.items) {
+      // Validate item.link
+      if (!item.link || typeof item.link !== 'string') {
+        console.warn(`Skipping invalid article link for: ${item.title}`);
+        continue; // Skip this article
+      }
+
       const content = await fetchFullContent(item.link);
       const safeTitle = slugify(item.title);
       const pubDate = new Date(item.pubDate);
@@ -81,16 +88,16 @@ async function fetchAndProcessArticles() {
       const articleFilename = `${formattedDate}-${safeTitle}.html`;
       createArticleHTML(item.title, content, articleFilename);
 
-      // Link path references "/articles/filename.html" from the site root
+      // Add article metadata for previews
       articles.push({
         title: item.title,
-        link: `/articles/${articleFilename}`,
+        link: `/articles/${articleFilename}`, // Fixed path for previews
         pubDate: item.pubDate,
-        preview: content.slice(0, 100) + '...',
+        preview: content.slice(0, 150) + '...', // Use longer preview
       });
     }
 
-    // 2. Save the "previews" JSON into the dist folder as well
+    // Save previews to "public/articles" folder
     fs.writeFileSync(
       path.join(outputDir, 'article-previews.json'),
       JSON.stringify(articles, null, 2)
@@ -103,4 +110,5 @@ async function fetchAndProcessArticles() {
   }
 }
 
+// Start fetching and processing articles
 fetchAndProcessArticles();
