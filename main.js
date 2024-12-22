@@ -1,34 +1,31 @@
 // src/main.js
 
-const { Configuration, OpenAIApi } = require('openai');
+const { OpenAIApi } = require('openai');
 const RSSParser = require('rss-parser');
 const fs = require('fs');
 const path = require('path');
 const axios = require('axios');
 
+// Temporarily remove strict key check so the project can build
+// (Uncomment later if desired)
 // if (!process.env.OPENAI_API_KEY) {
-//     console.error('Error: The OPENAI_API_KEY environment variable is not set.');
-//     process.exit(1);
+//   console.error('Error: The OPENAI_API_KEY environment variable is not set.');
+//   process.exit(1);
 // }
 
 // Configure OpenAI API
-const configuration = new Configuration({
+const openai = new OpenAIApi({
     apiKey: process.env.OPENAI_API_KEY || '',
 });
-const openai = new OpenAIApi(configuration);
 
 // Define the output directory for articles
 const outputDir = path.join(__dirname, 'public', 'articles');
-
-// Create the output directory if it doesn't exist
 if (!fs.existsSync(outputDir)) {
     fs.mkdirSync(outputDir, { recursive: true });
 }
 
 /**
  * Fetch the full content of an article from a given URL.
- * @param {string} url - The URL of the article to fetch.
- * @returns {string} - The extracted content or a fallback message.
  */
 async function fetchFullContent(url) {
     try {
@@ -50,9 +47,6 @@ async function fetchFullContent(url) {
 
 /**
  * Rephrase the full article content using OpenAI.
- * @param {string} title - The title of the article.
- * @param {string} content - The full content of the article.
- * @returns {string} - The rephrased content.
  */
 async function rephraseFullArticle(title, content) {
     try {
@@ -74,14 +68,12 @@ async function rephraseFullArticle(title, content) {
         return response.data.choices[0].message.content.trim();
     } catch (error) {
         console.error('Error rephrasing full article:', error.message);
-        return content; // Fallback to original content if there's an error
+        return content; // Fallback if there's an error
     }
 }
 
 /**
  * Generate a short preview for the article using OpenAI.
- * @param {string} content - The full content of the article.
- * @returns {string} - The generated article preview.
  */
 async function generateArticlePreview(content) {
     try {
@@ -107,9 +99,7 @@ async function generateArticlePreview(content) {
 
 /**
  * Slugify the text to create a URL-friendly string.
- * Removes non-ASCII characters and limits the length to 30 characters.
- * @param {string} text - The text to slugify.
- * @returns {string} - The slugified string.
+ * Limits length to 30 chars.
  */
 function slugify(text) {
     return text
@@ -127,10 +117,7 @@ function slugify(text) {
 }
 
 /**
- * Create an HTML file for the rephrased full article.
- * @param {string} title - The title of the article.
- * @param {string} content - The rephrased content of the article.
- * @param {string} filename - The filename for the HTML file.
+ * Create an HTML file for the rephrased article.
  */
 function createArticleHTML(title, content, filename) {
     const articleHTML = `
@@ -156,7 +143,7 @@ function createArticleHTML(title, content, filename) {
 }
 
 /**
- * Main function to fetch articles from RSS, process them, and generate previews.
+ * Fetch articles from RSS, process, and generate previews.
  */
 async function fetchAndProcessArticles() {
     try {
@@ -196,4 +183,6 @@ async function fetchAndProcessArticles() {
     }
 }
 
+// Run it
 fetchAndProcessArticles();
+
