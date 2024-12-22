@@ -15,6 +15,9 @@ fetch('/articles/article-previews.json')
         // Debug: Log the data for verification
         console.log('Fetched Articles:', data);
 
+        // Clear any existing content in the articles list (prevents duplication)
+        articlesList.innerHTML = '';
+
         // Loop through each article and render it
         data.forEach(article => {
             // Debug: Log each article object
@@ -39,12 +42,17 @@ fetch('/articles/article-previews.json')
                 </div>
             `;
 
-            // Append the article to the articles list
-            articlesList.appendChild(articleElement);
+            // Append the article to the articles list with a slight delay (to ensure DOM rendering)
+            setTimeout(() => {
+                articlesList.appendChild(articleElement);
+            }, 0);
         });
     })
     .catch(error => {
         // Handle errors and log them
         console.error('Error fetching article previews:', error);
-        alert('Failed to load articles. Please try again later.');
+
+        // Show a fallback message if articles fail to load
+        const articlesList = document.getElementById('coindesk-articles');
+        articlesList.innerHTML = '<p class="error-message">Failed to load articles. Please try again later.</p>';
     });
