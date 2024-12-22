@@ -23,5 +23,5 @@ dist-ssr
 *.sln
 *.sw?
 
-# Ignore generated articles
-public/articles
+# (Removed ignoring of generated articles)
+# public/articles
