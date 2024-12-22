@@ -6,15 +6,14 @@ const fs = require('fs');
 const path = require('path');
 const axios = require('axios');
 
-// Ensure that the OPENAI_API_KEY environment variable is set
-if (!process.env.OPENAI_API_KEY) {
-    console.error('Error: The OPENAI_API_KEY environment variable is not set.');
-    process.exit(1);
-}
+// if (!process.env.OPENAI_API_KEY) {
+//     console.error('Error: The OPENAI_API_KEY environment variable is not set.');
+//     process.exit(1);
+// }
 
 // Configure OpenAI API
 const configuration = new Configuration({
-    apiKey: process.env.OPENAI_API_KEY,
+    apiKey: process.env.OPENAI_API_KEY || '',
 });
 const openai = new OpenAIApi(configuration);
 
@@ -124,7 +123,7 @@ function slugify(text) {
         .replace(/\-\-+/g, '-')
         .replace(/^-+/, '')
         .replace(/-+$/, '')
-        .substring(0, 30); // Shortened to 30 chars
+        .substring(0, 30);
 }
 
 /**
@@ -170,10 +169,7 @@ async function fetchAndProcessArticles() {
             const rephrasedContent = await rephraseFullArticle(item.title, content);
             const preview = await generateArticlePreview(rephrasedContent);
 
-            // Create a safe, short filename
             const safeTitle = slugify(item.title);
-
-            // Format the publication date as YYYYMMDD
             const pubDate = new Date(item.pubDate);
             const formattedDate = `${pubDate.getFullYear()}${String(pubDate.getMonth() + 1).padStart(2, '0')}${String(pubDate.getDate()).padStart(2, '0')}`;
 
@@ -188,7 +184,6 @@ async function fetchAndProcessArticles() {
             });
         }
 
-        // Save the previews
         fs.writeFileSync(
             path.join(outputDir, 'article-previews.json'),
             JSON.stringify(articles, null, 2)
