@@ -1,32 +1,39 @@
 // vite.config.js
 import { defineConfig } from 'vite';
 import path from 'path';
+import { viteStaticCopy } from 'vite-plugin-static-copy';
 
 export default defineConfig({
-  // No need to set 'publicDir' as it defaults to 'public'
-  // publicDir: 'public',
+  plugins: [
+    viteStaticCopy({
+      targets: [
+        {
+          src: 'public/articles/**/*', // Copies articles folder
+          dest: 'articles', // Keeps it available after build
+        },
+      ],
+    }),
+  ],
 
   server: {
-    open: true, // Opens the browser when the server starts
-    port: 3000, // Development server port
+    open: true, // Opens browser
+    port: 3000, // Dev server port
   },
 
   build: {
-    outDir: 'dist', // Output directory for the build
-    assetsDir: 'assets', // Directory for assets within 'dist'
+    outDir: 'dist', // Build directory
+    assetsDir: 'assets', // Asset folder
     rollupOptions: {
-      // Customize Rollup options if needed
-      // Example: Externalize dependencies
-      // external: ['some-external-dependency'],
+      input: {
+        main: path.resolve(__dirname, 'index.html'),
+      },
     },
-    sourcemap: false, // Disable source maps for production
+    sourcemap: false,
   },
 
-  // Define aliases for easier imports
   resolve: {
     alias: {
       '@': path.resolve(__dirname, 'src'),
-      // Add more aliases if needed
     },
   },
 });
