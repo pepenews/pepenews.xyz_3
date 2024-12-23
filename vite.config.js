@@ -7,15 +7,15 @@ export default defineConfig({
     viteStaticCopy({
       targets: [
         {
-          src: 'public/articles/**/*', // Copies articles folder to dist/articles
-          dest: 'articles', // Keeps it available after build
+          src: 'public/articles/**/*', // Copy all articles
+          dest: 'articles',
         },
         {
-          src: 'src/js/previews.js', // Ensures previews.js is copied to dist/js
+          src: 'src/js/previews.js', // Explicitly include previews.js
           dest: 'js',
         },
         {
-          src: 'src/css/styles.css', // Ensures styles.css is copied to dist/css
+          src: 'src/css/styles.css', // Explicitly include styles.css
           dest: 'css',
         },
       ],
@@ -23,37 +23,34 @@ export default defineConfig({
   ],
 
   server: {
-    open: true, // Automatically open browser on server start
-    port: 3000, // Development server port
+    open: true,
+    port: 3000,
   },
 
   build: {
-    outDir: 'dist', // Output directory for build
-    assetsDir: 'assets', // Directory for static assets
+    outDir: 'dist',
+    assetsDir: 'assets',
     rollupOptions: {
       input: {
-        main: path.resolve(__dirname, 'index.html'), // Entry point
+        main: path.resolve(__dirname, 'index.html'),
       },
     },
-    sourcemap: false, // Disable source maps for production
-    emptyOutDir: true, // Clears old files in the dist folder before build
-    copyPublicDir: true, // Ensures files in public/ are copied to dist/
+    sourcemap: false,
+    emptyOutDir: true,
+    copyPublicDir: true,
   },
 
   resolve: {
     alias: {
-      '@': path.resolve(__dirname, 'src'), // Alias for cleaner imports
+      '@': path.resolve(__dirname, 'src'),
     },
   },
 
   optimizeDeps: {
-    include: ['axios', 'rss-parser'], // Pre-bundle dependencies for faster builds
+    include: ['axios', 'rss-parser'],
   },
 
   define: {
-    'process.env': {}, // Ensure compatibility with process.env variables
+    'process.env': {},
   },
-
-  // Add clear debugging messages for the build process
-  logLevel: 'info', // Shows more detailed logs during the build process
 });
