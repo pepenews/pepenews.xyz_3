@@ -1,1 +1,12 @@
-
+[
+    {
+        "title": "Sample Article 1",
+        "preview": "This is a preview of the first article.",
+        "link": "sample-article-1.html"
+    },
+    {
+        "title": "Sample Article 2",
+        "preview": "This is a preview of the second article.",
+        "link": "sample-article-2.html"
+    }
+]
