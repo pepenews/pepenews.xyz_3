@@ -10,6 +10,14 @@ export default defineConfig({
           src: 'public/articles/**/*', // Copies articles folder to dist/articles
           dest: 'articles', // Keeps it available after build
         },
+        {
+          src: 'src/js/previews.js', // Ensures previews.js is copied to dist/js
+          dest: 'js',
+        },
+        {
+          src: 'src/css/styles.css', // Ensures styles.css is copied to dist/css
+          dest: 'css',
+        },
       ],
     }),
   ],
@@ -38,13 +46,14 @@ export default defineConfig({
     },
   },
 
-  // Optimize dependencies to ensure compatibility
   optimizeDeps: {
     include: ['axios', 'rss-parser'], // Pre-bundle dependencies for faster builds
   },
 
-  // Build environment settings
   define: {
     'process.env': {}, // Ensure compatibility with process.env variables
   },
+
+  // Add clear debugging messages for the build process
+  logLevel: 'info', // Shows more detailed logs during the build process
 });
