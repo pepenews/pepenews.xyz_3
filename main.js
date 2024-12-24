@@ -49,7 +49,7 @@ function createArticleHTML(title, content, filename) {
     <meta name="description" content="${content.slice(0, 150)}" />
     <meta name="keywords" content="crypto, news, pepe, finance" />
     <title>${title}</title>
-    <link rel="stylesheet" href="/src/css/styles.css"> <!-- Corrected path -->
+    <link rel="stylesheet" href="/css/styles.css"> <!-- Corrected path -->
 </head>
 <body>
     <main id="app">
