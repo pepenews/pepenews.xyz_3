@@ -1,7 +1,7 @@
 // src/js/previews.js
 
-// Fetch and display article previews from the local JSON file
-fetch('/articles/article-previews.json')
+// Fetch and display article previews from the API
+fetch('/api/ingest')
     .then(response => {
         // Check if the response is valid
         if (!response.ok) {
@@ -18,16 +18,16 @@ fetch('/articles/article-previews.json')
         // Clear any existing content in the articles list (prevents duplication)
         articlesList.innerHTML = '';
 
+        // Handle both array response and object with items property
+        const articles = Array.isArray(data) ? data : (data.items || []);
+
         // Loop through each article and render it
-        data.forEach(article => {
+        articles.forEach(article => {
             // Debug: Log each article object
             console.log('Processing Article:', article);
 
-            // Ensure the link starts with '/articles/'
-            let localLink = article.link;
-            if (!localLink.startsWith('/articles/')) {
-                localLink = `/articles/${localLink}`;
-            }
+            // Use the original link from RSS feed
+            const articleLink = article.link || '#';
 
             // Create a new article container
             const articleElement = document.createElement('div');
@@ -47,7 +47,7 @@ fetch('/articles/article-previews.json')
 
             // Create link element
             const linkElement = document.createElement('a');
-            linkElement.href = localLink;
+            linkElement.href = articleLink;
             linkElement.textContent = 'Read Full Article';
             linkElement.classList.add('read-full-link');
             linkElement.target = '_blank';

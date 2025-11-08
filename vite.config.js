@@ -12,7 +12,7 @@ export default defineConfig({
         },
         {
           src: 'src/js/previews.js', // Explicitly include previews.js
-          dest: 'js',
+          dest: 'assets/js',
         },
         {
           src: 'src/css/styles.css', // Explicitly include styles.css
